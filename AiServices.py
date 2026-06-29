@@ -20,16 +20,13 @@ client = OpenAI(
     base_url="https://openrouter.ai/api/v1"
 )
 
-# =========================
-# Core AI Function
-# =========================
 
-def askai(user_prompt, system_prompt, temperature=0.2):
-
+def askai(user_prompt, system_prompt, temperature=0):
     try:
-        response = client.chat.completions.create(
+        stream = client.chat.completions.create(
             model="openai/gpt-4o-mini",
             temperature=temperature,
+            stream=True,
             messages=[
                 {
                     "role": "system",
@@ -42,11 +39,16 @@ def askai(user_prompt, system_prompt, temperature=0.2):
             ]
         )
 
-        return response.choices[0].message.content
+        # Yield each piece of generated text
+        for chunk in stream:
+            if chunk.choices:
+                delta = chunk.choices[0].delta.content
+
+                if delta is not None:
+                    yield delta
 
     except Exception as e:
-        return f"ERROR: {e}"
-
+        yield f"ERROR: {e}"
 
 # =========================
 # Helper Function
