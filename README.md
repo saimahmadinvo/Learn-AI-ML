@@ -1,6 +1,6 @@
-* DAY 03 @ Invozone *
+DAY 03 @ Invozone 
 
-** What is RAG? 
+What is RAG? 
 
 - Basics of RAG
 - Learnt about 
